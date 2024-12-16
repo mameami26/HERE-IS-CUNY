@@ -1,23 +1,30 @@
 {
-  "name": "backend",
+  "name": "mern-server",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "watch": "nodemon",
+    "seed": "node config/seeds.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@apollo/server": "^4.7.2",
     "apollo-server-express": "^3.13.0",
-    "bcrypt": "^5.1.1",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.7",
-    "express": "^4.21.2",
+    "axios": "^1.7.7",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "googleapis": "^144.0.0",
     "graphql": "^16.9.0",
-    "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.8.4"
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^8.6.3",
+    "stripe": "^8.67.0"
   },
-  "description": ""
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  }
 }
