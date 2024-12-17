@@ -35,8 +35,8 @@ async function startServer() {
 
   // Connect to MongoDB
   mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/techconnect', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+    // useNewUrlParser: true,
+    // useUnifiedTopology: true,
   });
 
   // Log MongoDB connection

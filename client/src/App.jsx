@@ -7,7 +7,7 @@ import Mentors from './pages/Mentors';
 import Courses from './pages/Courses';
 import Messages from './pages/Messages';
 import Profile from './pages/Profile';
-import './styles/App.css';
+import './styles/index.css';
 
 function App() {
   return (

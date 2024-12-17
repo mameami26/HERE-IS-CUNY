@@ -1,6 +1,7 @@
-const user = require('./user');
-const mentor = require('./mentor');
-const course = require('./course');
+const User = require('./User');
+const Event = require('./Events');
+const Mentorship = require('./Mentorship');
+const Job = require('./Jobs');   
+const Course = require('./Course');
 
-module.exports = { user, mentor, course };
- 
+module.exports = { User, Job, Mentorship, Event, Course };
