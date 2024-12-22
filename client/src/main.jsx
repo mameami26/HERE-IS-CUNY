@@ -1,17 +1,16 @@
 import ReactDOM from 'react-dom/client';
-import './styles/index.css'; // Assuming your CSS files are in the styles folder
+import './index.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-import App from './App';
-import Dashboard from './pages/Dashboard';
-import Signup from './pages/Signup';
-import SignIn from './pages/Signin';
-import ProfilePage from './pages/Profile';
-import MentorshipPage from './pages/Mentors';
+import App from './App.jsx';
+import WelcomePage from './pages/WelcomePage';  
+import Signup from './pages/Signup.jsx'
+import SignIn from './pages/signin.jsx';
+import HomePage from './pages/Home';
+import MentorshipPage from './pages/Mentorship';
 import CoursesPage from './pages/Courses';
-import MessagesPage from './pages/Messages';
-import JobsPage from './pages/Jobs';
 import EventsPage from './pages/Events';
+import JobsPage from './pages/Jobs';
 
 const router = createBrowserRouter([
   {
@@ -19,20 +18,20 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        index: true, // The default page when the app loads
-        element: <Dashboard />
+        index: true,
+        element: <WelcomePage />
       },
       {
-        path: 'signup',
+        path: 'signup',  // Correct route for Signup page
         element: <Signup />
       },
       {
-        path: 'signin',
+        path: 'signin',  // Correct route for SignIn page
         element: <SignIn />
       },
       {
-        path: 'profile',
-        element: <ProfilePage />
+        path: 'home',
+        element: <HomePage />
       },
       {
         path: 'mentorship',
@@ -43,16 +42,12 @@ const router = createBrowserRouter([
         element: <CoursesPage />
       },
       {
-        path: 'messages',
-        element: <MessagesPage />
+        path: 'events',
+        element: <EventsPage />
       },
       {
         path: 'jobs',
         element: <JobsPage />
-      },
-      {
-        path: 'events',
-        element: <EventsPage />
       },
     ]
   }

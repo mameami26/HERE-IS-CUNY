@@ -2,28 +2,20 @@ import decode from 'jwt-decode';
 
 class AuthService {
   getProfile() {
-    const token = this.getToken();
-    if (!token) return null; // Check if token exists before decoding
-    try {
-      return decode(token);
-    } catch (err) {
-      console.error('Error decoding token:', err); // Error logging
-      return null;
-    }
+    return decode(this.getToken());
   }
 
   loggedIn() {
     const token = this.getToken();
-    return !!token && !this.isTokenExpired(token); // Check token existence and validity
+    return !!token && !this.isTokenExpired(token);
   }
 
   isTokenExpired(token) {
     try {
       const decoded = decode(token);
-      return decoded.exp < Date.now() / 1000; // Check if token has expired
+      return decoded.exp < Date.now() / 1000;
     } catch (err) {
-      console.error('Token decoding failed:', err); // Log the error
-      return false; // Treat as valid if decoding fails (optional handling)
+      return false;
     }
   }
 
@@ -31,14 +23,14 @@ class AuthService {
     return localStorage.getItem('id_token');
   }
 
-  login(idToken, redirectUrl = '/Home') {
-    localStorage.setItem('id_token', idToken); // Consider using sessionStorage for better security in some cases
-    window.location.assign(redirectUrl); // Allow dynamic redirection
+  login(idToken) {
+    localStorage.setItem('id_token', idToken);
+    window.location.assign('/Home');
   }
 
-  logout(redirectUrl = '../pages/WelcomePage.jsx') {
+  logout() {
     localStorage.removeItem('id_token');
-    window.location.assign(redirectUrl);
+    window.location.assign('../pages/WelcomePage.jsx');
   }
 }
 

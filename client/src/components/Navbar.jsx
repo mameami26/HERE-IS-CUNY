@@ -1,28 +1,52 @@
-// src/components/Navbar.jsx
-import React from 'react';
 import { Link } from 'react-router-dom';
+import Auth from '../utils/auth'; 
+import '../styles/Navbar.css';
+import logo from "../assets/logo.png"
 
 function Navbar() {
+  function handleLogout() {
+    Auth.logout(); // Call the logout function to clear the token and redirect
+  }
+
+  function showNavigation() {
+    if (Auth.loggedIn()) {
+      return (
+        <ul className="navbar-links flex-row">
+          <li className="mx-1">
+            <Link to="/courses">Courses</Link>
+          </li>
+          <li className="mx-1">
+            <Link to="/events">Events</Link>
+          </li>
+          <li className="mx-1">
+            <Link to="/mentorship">Mentorship</Link>
+          </li>
+          <li className="mx-1">
+            <Link to="/jobs">Jobs</Link>
+          </li>
+          <li className="mx-1">
+            <button onClick={handleLogout}>Logout</button> {/* Changed from Link to button */}
+          </li>
+        </ul>
+      );
+    }
+    return null;
+  }
+
   return (
-    <nav style={{ padding: '1rem', backgroundColor: '#0074d9', color: '#fff' }}>
-      <ul style={{ display: 'flex', listStyle: 'none', margin: 0, padding: 0 }}>
-        <li style={{ margin: '0 1rem' }}>
-          <Link to="/" style={{ color: '#fff', textDecoration: 'none' }}>Dashboard</Link>
-        </li>
-        <li style={{ margin: '0 1rem' }}>
-          <Link to="/mentorship" style={{ color: '#fff', textDecoration: 'none' }}>Mentorship</Link>
-        </li>
-        <li style={{ margin: '0 1rem' }}>
-          <Link to="/courses" style={{ color: '#fff', textDecoration: 'none' }}>Courses</Link>
-        </li>
-        <li style={{ margin: '0 1rem' }}>
-          <Link to="/messages" style={{ color: '#fff', textDecoration: 'none' }}>Messages</Link>
-        </li>
-        <li style={{ margin: '0 1rem' }}>
-          <Link to="/profile" style={{ color: '#fff', textDecoration: 'none' }}>Profile</Link>
-        </li>
-      </ul>
-    </nav>
+    <header className="navbar">
+      <div className="navbar-container flex-row">
+        {/* Left side: Logo or Name */}
+        <img src= {logo}  alt="My Photo" className="avatar" width = '50px' height='50px'/> 
+          <h1>
+            <Link to="/">SHE-TECH-NET</Link>
+          </h1>
+        </div>
+        <nav className="navbar-links-container">
+          {showNavigation()}
+        </nav>
+     
+    </header>
   );
 }
 

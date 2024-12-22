@@ -33,46 +33,48 @@ query getMentorships($industry: String, $yearsOfExperience: Int) {
 `;
 
 export const QUERY_JOBS = gql`
- query Jobs {
-  jobs {
-    _id
-    company
-    position
-    description
-    applicationLink
-    postedDate
-    isWomenFriendly
-    supportsDiversity
-    applicants
+  query Jobs {
+    jobs {
+      _id
+      company
+      position
+      description
+      applicationLink
+      postedDate
+      isWomenFriendly
+    }
   }
-}
 `;
 
 export const QUERY_EVENTS = gql`
- query Events {
-  events {
-    _id
-    title
-    description
-    date
-    registrationLink
-    tags
-    enrollments
+  query Events {
+    events {
+      _id
+      title
+      description
+      date
+      registrationLink
+      tags
+    }
   }
-}
 `;
 
 export const QUERY_USERS = gql`
-query Users {
-  users {
-    _id
-    firstName
-    lastName
-    email
-    role
-    skills
-    bio
-    profileImage
+  query getUsers {
+    users {
+      _id
+      name
+      email
+      coursesEnrolled {
+        _id
+        title
+        description
+      }
+      mentorships {
+        _id
+        expertise
+        industry
+      }
+    }
   }
-}
 `;

@@ -1,11 +1,12 @@
 import React from 'react';
+import '../styles/Footer.css';
 
-function Footer() {
+const Footer = () => {
   return (
     <footer className="footer">
-      <p>© 2024 TechConnectCUNY. All Rights Reserved.</p>
+      <p>&copy; 2024 SHE-TECH-IN. All rights reserved.</p>
     </footer>
   );
-}
+};
 
 export default Footer;
