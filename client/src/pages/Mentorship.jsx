@@ -1,33 +1,30 @@
+import React from 'react';
 import { useQuery } from '@apollo/client';
 import { QUERY_MENTORSHIPS } from '../utils/queries';
-import '../styles/mainpages.css'; 
+import MentorshipCard from '../components/Mentorships/MentorshipCard';
+import '../style/Mentorships.css'; // Import CSS for styling
 
-function MentorshipPage() {
-  const { loading, error, data } = useQuery(QUERY_MENTORSHIPS);
+const MentorshipPage = () => {
+  const { loading, error, data } = useQuery(QUERY_MENTORSHIPS, {
+    variables: { industry: "Web Development", yearsOfExperience: 5 }, // Example variables
+  });
 
-  if (loading) return <p>Loading mentorships...</p>;
-  if (error) return <p>Error fetching mentorships: {error.message}</p>;
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error loading mentorships: {error.message}</p>;
+
+  const mentorships = data?.mentorships || [];
 
   return (
-    <>
-      <main className="mentorship-page">
-        <section className="content">
-          <h1>Available Mentorships</h1>
-          <div className="mentorship-listings">
-            {data.mentorships.map((mentorship) => (
-              <div key={mentorship._id} className="mentorship-card">
-                <h2>{mentorship.user.firstName} {mentorship.user.lastName}</h2>
-                <p><strong>Expertise:</strong> {mentorship.expertise?.join(', ') || 'No expertise listed'}</p>
-                <p><strong>Industry:</strong> {mentorship.industry || 'No industry listed'}</p>
-                <p><strong>Years of Experience:</strong> {mentorship.yearsOfExperience || 'No years of experience listed'}</p>
-                <p><strong>Available Time Slots:</strong> {mentorship.availableTimeSlots?.join(', ') || 'No available time slots'}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-      </main>
-    </>
+    <div className="mentorship-page">
+      <h1>Mentorship Opportunities</h1>
+      <p>Explore mentorships available in your field.</p>
+      <div className="mentorship-list">
+        {mentorships.map((mentorship) => (
+          <MentorshipCard key={mentorship._id} mentorship={mentorship} />
+        ))}
+      </div>
+    </div>
   );
-}
+};
 
 export default MentorshipPage;

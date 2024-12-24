@@ -1,24 +1,27 @@
 const typeDefs = `
-  # User Roles Enum
-  enum UserRole {
-    STUDENT
-    ADMIN
-    INSTRUCTOR
-  }
-
-  # User Type
   type User {
-    _id: ID!
-    firstName: String!
-    lastName: String!
-    email: String!
-    role: UserRole!
-    skills: [String]
-    bio: String
-    profileImage: String
+    _id: ID
+    username: String
+    email: String
+    password: String
+    thoughts: [Thought]!
   }
 
-  # Mentorship Type
+  type Thought {
+    _id: ID
+    thoughtText: String
+    thoughtAuthor: String
+    createdAt: String
+    comments: [Comment]!
+  }
+
+  type Comment {
+    _id: ID
+    commentText: String
+    commentAuthor: String
+    createdAt: String
+  }
+
   type Mentorship {
     _id: ID!
     user: User!
@@ -28,102 +31,38 @@ const typeDefs = `
     yearsOfExperience: Int
   }
 
-  # Job Type
-  type Job {
-    _id: ID!
-    company: String!
-    position: String!
-    description: String!
-    applicationLink: String!
-    postedDate: String!
-    isWomenFriendly: Boolean!
-    supportsDiversity: Boolean
-    applicants: [User]
+  input MentorshipInput {
+    expertise: [String]!
+    availableTimeSlots: [String]!
+    industry: String
+    yearsOfExperience: Int
   }
 
-  # Event Type
-  type Event {
-    _id: ID!
-    title: String!
-    description: String!
-    date: String!
-    registrationLink: String!
-    tags: [String]
-    enrollments: Int
-  }
-
-  # Course Type
-  type Course {
-    _id: ID!
-    title: String!
-    description: String!
-    author: User!
-  }
-
-  # Auth Type for Authentication Responses
   type Auth {
     token: ID!
     user: User
   }
 
-  # Query Definitions
   type Query {
-    me: User
     users: [User]
-    courses: [Course]
-    mentors: [Mentorship]
+    user(username: String!): User
+    thoughts(username: String): [Thought]
+    thought(thoughtId: ID!): Thought
     mentorships(industry: String, yearsOfExperience: Int): [Mentorship]
-    jobs: [Job]
-    events: [Event]
   }
 
-  # Input for User Creation
-  input UserInput {
-    firstName: String!
-    lastName: String!
-    email: String!
-    password: String!
-    role: UserRole!
-  }
-
-  # Mutation Definitions
   type Mutation {
-    signup(firstName: String!, lastName: String!, email: String!, password: String!): Auth
+    addUser(username: String!, email: String!, password: String!): Auth
     login(email: String!, password: String!): Auth
-    addCourse(title: String!, description: String!): Course
-    addMentor(expertise: String!): Mentorship
-    createMentorship(
-      expertise: [String]!
-      availableTimeSlots: [String]!
-      industry: String
-      yearsOfExperience: Int
-    ): Mentorship
-    createJob(
-      company: String!
-      position: String!
-      description: String!
-      applicationLink: String!
-      postedDate: String!
-      isWomenFriendly: Boolean!
-    ): Job
-    createEvent(
-      title: String!
-      description: String!
-      date: String!
-      registrationLink: String!
-      tags: [String]
-    ): Event
-    enrollEvent(eventId: ID!): Event
-    applyJob(jobId: ID!): Job
-    updateUser(
-      firstName: String
-      lastName: String
-      email: String
-      role: UserRole
-      skills: [String]
-      bio: String
-      profileImage: String
-    ): User
+    addThought(thoughtText: String!, thoughtAuthor: String!): Thought
+    addComment(
+      thoughtId: ID!
+      commentText: String!
+      commentAuthor: String!
+    ): Thought
+    removeThought(thoughtId: ID!): Thought
+    removeComment(thoughtId: ID!, commentId: ID!): Thought
+    createMentorship(input: MentorshipInput!): Mentorship
   }
 `;
 

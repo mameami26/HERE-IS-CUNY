@@ -1,0 +1,17 @@
+[
+    {
+      "user": "User_ID_1", 
+      "expertise": ["JavaScript", "React"],
+      "availableTimeSlots": ["Monday 10am-12pm", "Wednesday 2pm-4pm"],
+      "industry": "Software Development",
+      "yearsOfExperience": 5
+    },
+    {
+      "user": "User_ID_2",
+      "expertise": ["Node.js", "GraphQL"],
+      "availableTimeSlots": ["Tuesday 1pm-3pm", "Thursday 11am-1pm"],
+      "industry": "Backend Development",
+      "yearsOfExperience": 3
+    }
+  ]
+  
