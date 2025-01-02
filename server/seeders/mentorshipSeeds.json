@@ -1,17 +1,16 @@
 [
-    {
-      "user": "User_ID_1", 
-      "expertise": ["JavaScript", "React"],
-      "availableTimeSlots": ["Monday 10am-12pm", "Wednesday 2pm-4pm"],
-      "industry": "Software Development",
-      "yearsOfExperience": 5
-    },
-    {
-      "user": "User_ID_2",
-      "expertise": ["Node.js", "GraphQL"],
-      "availableTimeSlots": ["Tuesday 1pm-3pm", "Thursday 11am-1pm"],
-      "industry": "Backend Development",
-      "yearsOfExperience": 3
-    }
-  ]
-  
+  {
+    "user": "users[0]._id",
+    "price": 100,
+    "industry": "Software Development",
+    "yearsOfExperience": 5,
+    "availableTimeSlots": ["Monday 10am-12pm", "Wednesday 2pm-4pm"]
+  },
+  {
+    "user": "users[1]._id",
+    "price": 100,
+    "industry": "Web Development",
+    "yearsOfExperience": 2,
+    "availableTimeSlots": ["Tuesday 1pm-3pm", "Thursday 11am-1pm"]
+  }
+]

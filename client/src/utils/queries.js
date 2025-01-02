@@ -1,5 +1,15 @@
 import { gql } from '@apollo/client';
 
+// Reusable fragments for thoughts
+export const THOUGHT_FIELDS = gql`
+  fragment ThoughtFields on Thought {
+    _id
+    thoughtText
+    thoughtAuthor
+    createdAt
+  }
+`;
+
 // Query to fetch all users
 export const QUERY_USER = gql`
   query user($username: String!) {
@@ -8,34 +18,28 @@ export const QUERY_USER = gql`
       username
       email
       thoughts {
-        _id
-        thoughtText
-        createdAt
+        ...ThoughtFields
       }
     }
   }
+  ${THOUGHT_FIELDS}
 `;
 
 // Query to fetch all thoughts
 export const QUERY_THOUGHTS = gql`
   query getThoughts {
     thoughts {
-      _id
-      thoughtText
-      thoughtAuthor
-      createdAt
+      ...ThoughtFields
     }
   }
+  ${THOUGHT_FIELDS}
 `;
 
 // Query to fetch a single thought by ID
 export const QUERY_SINGLE_THOUGHT = gql`
   query getSingleThought($thoughtId: ID!) {
     thought(thoughtId: $thoughtId) {
-      _id
-      thoughtText
-      thoughtAuthor
-      createdAt
+      ...ThoughtFields
       comments {
         _id
         commentText
@@ -43,24 +47,7 @@ export const QUERY_SINGLE_THOUGHT = gql`
       }
     }
   }
-`;
-
-// Query to fetch mentorship opportunities
-export const QUERY_MENTORSHIPS = gql`
-  query mentorships($industry: String, $yearsOfExperience: Int) {
-    mentorships(industry: $industry, yearsOfExperience: $yearsOfExperience) {
-      _id
-      user {
-        _id
-        firstName
-        lastName
-      }
-      expertise
-      availableTimeSlots
-      industry
-      yearsOfExperience
-    }
-  }
+  ${THOUGHT_FIELDS}
 `;
 
 // Query to fetch the logged-in user's data
@@ -71,9 +58,7 @@ export const QUERY_ME = gql`
       username
       email
       thoughts {
-        _id
-        thoughtText
-        createdAt
+        ...ThoughtFields
       }
       mentorships {
         _id
@@ -83,36 +68,21 @@ export const QUERY_ME = gql`
       }
     }
   }
+  ${THOUGHT_FIELDS}
 `;
 
-// Query to fetch mentorships created by the logged-in user
-export const QUERY_MY_MENTORSHIPS = gql`
-  query myMentorships {
-    myMentorships {
+// Query to fetch mentorships
+export const QUERY_MENTORSHIPS = gql`
+  query getMentorships($industry: String, $yearsOfExperience: Int) {
+    mentorships(industry: $industry, yearsOfExperience: $yearsOfExperience) {
       _id
-      expertise
-      availableTimeSlots
       industry
       yearsOfExperience
-    }
-  }
-`;
-
-// Query to fetch mentorship details by ID
-export const QUERY_SINGLE_MENTORSHIP = gql`
-  query getSingleMentorship($mentorshipId: ID!) {
-    mentorship(mentorshipId: $mentorshipId) {
-      _id
+      availableTimeSlots
       user {
-        _id
         firstName
         lastName
-        email
       }
-      expertise
-      availableTimeSlots
-      industry
-      yearsOfExperience
     }
   }
 `;

@@ -1,5 +1,6 @@
 const { User, Thought, Mentorship } = require('../models');
 const { signToken, AuthenticationError } = require('../utils/auth');
+const { ApolloError } = require('apollo-server-express');
 
 const resolvers = {
   Query: {
@@ -17,11 +18,15 @@ const resolvers = {
       return Thought.findOne({ _id: thoughtId });
     },
     mentorships: async (_, { industry, yearsOfExperience }) => {
-      const filters = {};
-      if (industry) filters.industry = industry;
-      if (yearsOfExperience) filters.yearsOfExperience = yearsOfExperience;
-
-      return Mentorship.find(filters).populate('user');
+      try {
+        const filters = {};
+        if (industry) filters.industry = industry;
+        if (yearsOfExperience) filters.yearsOfExperience = yearsOfExperience;
+        return await Mentorship.find(filters).populate('user');
+      } catch (err) {
+        console.error('Error fetching mentorships:', err);
+        throw new Error('Failed to fetch mentorships');
+      }
     },
   },
 
@@ -49,41 +54,81 @@ const resolvers = {
       return { token, user };
     },
     addThought: async (parent, { thoughtText, thoughtAuthor }) => {
-      const thought = await Thought.create({ thoughtText, thoughtAuthor });
-
-      await User.findOneAndUpdate(
-        { username: thoughtAuthor },
-        { $addToSet: { thoughts: thought._id } }
-      );
-
-      return thought;
+      try {
+        const thought = await Thought.create({ thoughtText, thoughtAuthor });
+        await User.findOneAndUpdate(
+          { username: thoughtAuthor },
+          { $addToSet: { thoughts: thought._id } }
+        );
+        return thought;
+      } catch (err) {
+        console.error('Error adding thought:', err);
+        throw new Error('Failed to add thought');
+      }
     },
     addComment: async (parent, { thoughtId, commentText, commentAuthor }) => {
-      return Thought.findOneAndUpdate(
-        { _id: thoughtId },
-        {
-          $addToSet: { comments: { commentText, commentAuthor } },
-        },
-        {
-          new: true,
-          runValidators: true,
-        }
-      );
+      try {
+        return Thought.findOneAndUpdate(
+          { _id: thoughtId },
+          {
+            $addToSet: { comments: { commentText, commentAuthor } },
+          },
+          { new: true, runValidators: true }
+        );
+      } catch (err) {
+        console.error('Error adding comment:', err);
+        throw new Error('Failed to add comment');
+      }
     },
-    removeThought: async (parent, { thoughtId }) => {
+    removeThought: async (parent, { thoughtId }, { user }) => {
+      if (!user) throw new AuthenticationError('Not authenticated');
+
+      const thought = await Thought.findById(thoughtId);
+      if (thought.thoughtAuthor !== user.username) {
+        throw new AuthenticationError('You are not authorized to delete this thought');
+      }
+
       return Thought.findOneAndDelete({ _id: thoughtId });
     },
-    removeComment: async (parent, { thoughtId, commentId }) => {
-      return Thought.findOneAndUpdate(
-        { _id: thoughtId },
-        { $pull: { comments: { _id: commentId } } },
-        { new: true }
-      );
-    },
-    createMentorship: async (_, { input }, { user }) => {
+    createMentorship: async (_, { expertise, availableTimeSlots, industry, yearsOfExperience }, { user }) => {
       if (!user) throw new AuthenticationError('Not authenticated');
-      const mentorship = await Mentorship.create({ ...input, user: user._id });
-      return Mentorship.findById(mentorship._id).populate('user');
+
+      try {
+        const newMentorship = await Mentorship.create({
+          user: user._id,
+          expertise,
+          availableTimeSlots,
+          industry,
+          yearsOfExperience,
+        });
+        return await Mentorship.findById(newMentorship._id).populate('user');
+      } catch (error) {
+        console.error('Error creating mentorship:', error);
+        throw new ApolloError('Error creating mentorship', 'INTERNAL_SERVER_ERROR');
+      }
+    },
+    updateMentorship: async (_, { mentorshipId, expertise, availableTimeSlots, industry, yearsOfExperience }, { user }) => {
+      if (!user) throw new AuthenticationError('Not authenticated');
+
+      try {
+        const mentorship = await Mentorship.findById(mentorshipId);
+        if (!mentorship) throw new Error('Mentorship not found');
+
+        if (mentorship.user.toString() !== user._id.toString()) {
+          throw new AuthenticationError('You are not authorized to update this mentorship');
+        }
+
+        mentorship.expertise = expertise || mentorship.expertise;
+        mentorship.availableTimeSlots = availableTimeSlots || mentorship.availableTimeSlots;
+        mentorship.industry = industry || mentorship.industry;
+        mentorship.yearsOfExperience = yearsOfExperience || mentorship.yearsOfExperience;
+
+        await mentorship.save();
+        return mentorship;
+      } catch (err) {
+        console.error('Error updating mentorship:', err);
+        throw new ApolloError('Error updating mentorship', 'INTERNAL_SERVER_ERROR');
+      }
     },
   },
 };

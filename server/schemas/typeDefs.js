@@ -3,8 +3,8 @@ const typeDefs = `
     _id: ID
     username: String
     email: String
-    password: String
     thoughts: [Thought]!
+    mentorships: [Mentorship]
   }
 
   type Thought {
@@ -31,6 +31,11 @@ const typeDefs = `
     yearsOfExperience: Int
   }
 
+  type Auth {
+    token: ID!
+    user: User
+  }
+
   input MentorshipInput {
     expertise: [String]!
     availableTimeSlots: [String]!
@@ -38,31 +43,24 @@ const typeDefs = `
     yearsOfExperience: Int
   }
 
-  type Auth {
-    token: ID!
-    user: User
-  }
-
   type Query {
     users: [User]
     user(username: String!): User
     thoughts(username: String): [Thought]
     thought(thoughtId: ID!): Thought
-    mentorships(industry: String, yearsOfExperience: Int): [Mentorship]
+    mentorships(industry: String, yearsOfExperience: Int, limit: Int, offset: Int): [Mentorship]
   }
 
   type Mutation {
     addUser(username: String!, email: String!, password: String!): Auth
     login(email: String!, password: String!): Auth
     addThought(thoughtText: String!, thoughtAuthor: String!): Thought
-    addComment(
-      thoughtId: ID!
-      commentText: String!
-      commentAuthor: String!
-    ): Thought
+    addComment(thoughtId: ID!, commentText: String!, commentAuthor: String!): Thought
     removeThought(thoughtId: ID!): Thought
     removeComment(thoughtId: ID!, commentId: ID!): Thought
     createMentorship(input: MentorshipInput!): Mentorship
+    updateMentorship(mentorshipId: ID!, expertise: [String], availableTimeSlots: [String], industry: String, yearsOfExperience: Int): Mentorship # Added this
+    requestMentorship(mentorshipId: ID!): Mentorship
   }
 `;
 
