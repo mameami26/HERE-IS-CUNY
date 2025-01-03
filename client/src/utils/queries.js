@@ -1,16 +1,5 @@
 import { gql } from '@apollo/client';
 
-// Reusable fragments for thoughts
-export const THOUGHT_FIELDS = gql`
-  fragment ThoughtFields on Thought {
-    _id
-    thoughtText
-    thoughtAuthor
-    createdAt
-  }
-`;
-
-// Query to fetch all users
 export const QUERY_USER = gql`
   query user($username: String!) {
     user(username: $username) {
@@ -18,28 +7,32 @@ export const QUERY_USER = gql`
       username
       email
       thoughts {
-        ...ThoughtFields
+        _id
+        thoughtText
+        createdAt
       }
     }
   }
-  ${THOUGHT_FIELDS}
 `;
 
-// Query to fetch all thoughts
 export const QUERY_THOUGHTS = gql`
   query getThoughts {
     thoughts {
-      ...ThoughtFields
+      _id
+      thoughtText
+      thoughtAuthor
+      createdAt
     }
   }
-  ${THOUGHT_FIELDS}
 `;
 
-// Query to fetch a single thought by ID
 export const QUERY_SINGLE_THOUGHT = gql`
   query getSingleThought($thoughtId: ID!) {
     thought(thoughtId: $thoughtId) {
-      ...ThoughtFields
+      _id
+      thoughtText
+      thoughtAuthor
+      createdAt
       comments {
         _id
         commentText
@@ -47,7 +40,6 @@ export const QUERY_SINGLE_THOUGHT = gql`
       }
     }
   }
-  ${THOUGHT_FIELDS}
 `;
 
 // Query to fetch the logged-in user's data
@@ -68,7 +60,6 @@ export const QUERY_ME = gql`
       }
     }
   }
-  ${THOUGHT_FIELDS}
 `;
 
 // Query to fetch mentorships
