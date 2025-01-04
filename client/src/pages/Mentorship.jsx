@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { useQuery, useMutation } from '@apollo/client';
-import { QUERY_MENTORSHIPS } from '../utils/queries';
+import { useMutation, useQuery } from '@apollo/client';
+import { useState } from 'react';
+import '../style/Mentorships.css';
 import { REQUEST_MENTORSHIP } from '../utils/mutations';
-import '../style/mentorships.css';
+import { QUERY_MENTORSHIPS } from '../utils/queries';
 
 function MentorshipPage() {
   const [filter, setFilter] = useState({ industry: '', yearsOfExperience: '' });
