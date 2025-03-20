@@ -1,34 +1,35 @@
 const typeDefs = `
-  type User {
-    _id: ID
-    username: String
-    email: String
+   type User {
+    _id: ID!
+    username: String!
+    email: String!
     thoughts: [Thought]!
     mentorships: [Mentorship]
   }
 
   type Thought {
-    _id: ID
-    thoughtText: String
-    thoughtAuthor: String
-    createdAt: String
+    _id: ID!
+    thoughtText: String!
+    thoughtAuthor: String!
+    createdAt: String!
     comments: [Comment]!
   }
 
   type Comment {
-    _id: ID
-    commentText: String
-    commentAuthor: String
-    createdAt: String
+    _id: ID!
+    commentText: String!
+    commentAuthor: String!
+    createdAt: String!
   }
 
   type Mentorship {
     _id: ID!
     user: User!
+    description: String!
     expertise: [String]!
     availableTimeSlots: [String]!
-    industry: String
-    yearsOfExperience: Int
+    industry: String!
+    yearsOfExperience: Int!
   }
 
   type Auth {
@@ -37,10 +38,11 @@ const typeDefs = `
   }
 
   input MentorshipInput {
+    description: String!
     expertise: [String]!
     availableTimeSlots: [String]!
-    industry: String
-    yearsOfExperience: Int
+    industry: String!
+    yearsOfExperience: Int!
   }
 
   type Query {
@@ -52,14 +54,21 @@ const typeDefs = `
   }
 
   type Mutation {
-   addUser(username: String!, email: String!, password: String!): Auth
+    addUser(username: String!, email: String!, password: String!): Auth
     login(email: String!, password: String!): Auth
     addThought(thoughtText: String!, thoughtAuthor: String!): Thought
     addComment(thoughtId: ID!, commentText: String!, commentAuthor: String!): Thought
     removeThought(thoughtId: ID!): Thought
     removeComment(thoughtId: ID!, commentId: ID!): Thought
     createMentorship(input: MentorshipInput!): Mentorship
-    updateMentorship(mentorshipId: ID!, expertise: [String], availableTimeSlots: [String], industry: String, yearsOfExperience: Int): Mentorship # Added this
+    updateMentorship(
+      mentorshipId: ID!,
+      description: String,
+      expertise: [String],
+      availableTimeSlots: [String],
+      industry: String,
+      yearsOfExperience: Int
+    ): Mentorship
     requestMentorship(mentorshipId: ID!): Mentorship
   }
 `;

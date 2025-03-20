@@ -1,5 +1,6 @@
 import { gql } from '@apollo/client';
 
+// Query to fetch a user by username
 export const QUERY_USER = gql`
   query user($username: String!) {
     user(username: $username) {
@@ -11,10 +12,18 @@ export const QUERY_USER = gql`
         thoughtText
         createdAt
       }
+      mentorships {
+        _id
+        description
+        expertise
+        industry
+        yearsOfExperience
+      }
     }
   }
 `;
 
+// Query to fetch all thoughts
 export const QUERY_THOUGHTS = gql`
   query getThoughts {
     thoughts {
@@ -26,6 +35,7 @@ export const QUERY_THOUGHTS = gql`
   }
 `;
 
+// Query to fetch a single thought by ID
 export const QUERY_SINGLE_THOUGHT = gql`
   query getSingleThought($thoughtId: ID!) {
     thought(thoughtId: $thoughtId) {
@@ -50,10 +60,13 @@ export const QUERY_ME = gql`
       username
       email
       thoughts {
-        ...ThoughtFields
+        _id
+        thoughtText
+        createdAt
       }
       mentorships {
         _id
+        description
         expertise
         industry
         yearsOfExperience
@@ -62,17 +75,19 @@ export const QUERY_ME = gql`
   }
 `;
 
-// Query to fetch mentorships
+// Query to fetch all mentorships with optional filters
 export const QUERY_MENTORSHIPS = gql`
   query getMentorships($industry: String, $yearsOfExperience: Int) {
     mentorships(industry: $industry, yearsOfExperience: $yearsOfExperience) {
       _id
+      description
+      expertise
+      availableTimeSlots
       industry
       yearsOfExperience
-      availableTimeSlots
       user {
-        firstName
-        lastName
+        username
+        email
       }
     }
   }

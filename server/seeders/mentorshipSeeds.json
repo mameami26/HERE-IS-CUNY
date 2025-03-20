@@ -1,16 +1,18 @@
 [
   {
-    "user": "users[0]._id",
-    "price": 100,
-    "industry": "Software Development",
-    "yearsOfExperience": 5,
-    "availableTimeSlots": ["Monday 10am-12pm", "Wednesday 2pm-4pm"]
+    "username": "Brian Kernighan",
+    "description": "Experienced Software Developer mentoring in full-stack development.",
+    "expertise": ["C", "Unix", "Algorithms"],
+    "availableTimeSlots": ["Monday 10am-12pm", "Wednesday 2pm-4pm"],
+    "industry": "Development",
+    "yearsOfExperience": 10
   },
   {
-    "user": "users[1]._id",
-    "price": 100,
-    "industry": "Web Development",
-    "yearsOfExperience": 2,
-    "availableTimeSlots": ["Tuesday 1pm-3pm", "Thursday 11am-1pm"]
+    "username": "Kent Beck",
+    "description": "Agile methodology expert and software design mentor.",
+    "expertise": ["TDD", "XP", "Software Design"],
+    "availableTimeSlots": ["Tuesday 1pm-3pm", "Thursday 11am-1pm"],
+    "industry": "Development",
+    "yearsOfExperience": 15
   }
 ]

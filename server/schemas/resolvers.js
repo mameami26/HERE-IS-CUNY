@@ -90,38 +90,43 @@ const resolvers = {
 
       return Thought.findOneAndDelete({ _id: thoughtId });
     },
-    createMentorship: async (_, { expertise, availableTimeSlots, industry, yearsOfExperience }, { user }) => {
+    createMentorship: async (_, { description, expertise, availableTimeSlots, industry, yearsOfExperience }, { user }) => {
       if (!user) throw new AuthenticationError('Not authenticated');
 
       try {
         const newMentorship = await Mentorship.create({
           user: user._id,
+          description, // Ensure description is included
           expertise,
           availableTimeSlots,
           industry,
           yearsOfExperience,
         });
+
         return await Mentorship.findById(newMentorship._id).populate('user');
       } catch (error) {
         console.error('Error creating mentorship:', error);
         throw new ApolloError('Error creating mentorship', 'INTERNAL_SERVER_ERROR');
       }
     },
-    updateMentorship: async (_, { mentorshipId, expertise, availableTimeSlots, industry, yearsOfExperience }, { user }) => {
+
+    updateMentorship: async (_, { mentorshipId, description, expertise, availableTimeSlots, industry, yearsOfExperience }, { user }) => {
       if (!user) throw new AuthenticationError('Not authenticated');
 
       try {
         const mentorship = await Mentorship.findById(mentorshipId);
-        if (!mentorship) throw new Error('Mentorship not found');
+        if (!mentorship) throw new ApolloError('Mentorship not found', 'NOT_FOUND');
 
         if (mentorship.user.toString() !== user._id.toString()) {
           throw new AuthenticationError('You are not authorized to update this mentorship');
         }
 
-        mentorship.expertise = expertise || mentorship.expertise;
-        mentorship.availableTimeSlots = availableTimeSlots || mentorship.availableTimeSlots;
-        mentorship.industry = industry || mentorship.industry;
-        mentorship.yearsOfExperience = yearsOfExperience || mentorship.yearsOfExperience;
+        // Ensure at least one field is updated
+        if (description !== undefined) mentorship.description = description;
+        if (expertise !== undefined) mentorship.expertise = expertise;
+        if (availableTimeSlots !== undefined) mentorship.availableTimeSlots = availableTimeSlots;
+        if (industry !== undefined) mentorship.industry = industry;
+        if (yearsOfExperience !== undefined) mentorship.yearsOfExperience = yearsOfExperience;
 
         await mentorship.save();
         return mentorship;

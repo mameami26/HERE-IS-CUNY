@@ -7,41 +7,64 @@ const cleanDB = require('./cleanDB');
 
 db.once('open', async () => {
   try {
+    console.log('🧹 Cleaning previous database records...');
+    
     // Clean previous data
     await cleanDB('Thought', 'thoughts');
     await cleanDB('User', 'users');
     await cleanDB('Mentorship', 'mentorships'); // Clean mentorship collection
 
-    // Create users
-    const users = await User.create(userSeeds);
+    console.log('✅ Previous data cleared.');
 
-    // Create thoughts and associate with users
+    // Seed Users and store their ObjectIds
+    console.log('👤 Seeding users...');
+    const users = await User.create(userSeeds);
+    console.log('✅ Users Seeded:', users.map(user => user.username));
+
+    // Create a mapping of usernames to their MongoDB ObjectIds
+    const userMap = {};
+    users.forEach(user => {
+      userMap[user.username] = user._id;
+    });
+
+    // Seed Thoughts and associate them with Users (No changes here)
+    console.log('💭 Seeding thoughts...');
     for (let i = 0; i < thoughtSeeds.length; i++) {
       const { _id, thoughtAuthor } = await Thought.create(thoughtSeeds[i]);
       await User.findOneAndUpdate(
         { username: thoughtAuthor },
-        {
-          $addToSet: { thoughts: _id },
-        }
+        { $addToSet: { thoughts: _id } }
       );
     }
+    console.log('✅ Thoughts Seeded.');
 
-    // Create mentorships and associate with users
-    for (let i = 0; i < mentorshipSeeds.length; i++) {
-      const mentorship = mentorshipSeeds[i];
-      const user = await User.findById(mentorship.user);
-      if (user) {
-        mentorship.user = user._id; // Ensure user association
-        await Mentorship.create(mentorship);
-      } else {
-        console.error(`User with ID ${mentorship.user} not found`);
+    // Seed Mentorships with Valid User ObjectIds
+    console.log('🎓 Seeding mentorships...');
+    const mentorshipsWithUsers = mentorshipSeeds.map(mentorship => {
+      if (!userMap[mentorship.username]) {
+        console.error(`❌ Error: User "${mentorship.username}" not found in database. Skipping this mentorship.`);
+        return null;
       }
+      return {
+        ...mentorship,
+        user: userMap[mentorship.username] // Assign correct ObjectId
+      };
+    });
+
+    // Filter out any mentorships without a valid user
+    const validMentorships = mentorshipsWithUsers.filter(m => m !== null);
+
+    if (validMentorships.length > 0) {
+      await Mentorship.insertMany(validMentorships);
+      console.log('✅ Mentorships Seeded.');
+    } else {
+      console.log('⚠️ No valid mentorships to seed.');
     }
 
-    console.log('Database seeded successfully!');
+    console.log('🌱 Database seeding complete!');
     process.exit(0);
   } catch (err) {
-    console.error(err);
+    console.error('❌ Seeding Error:', err);
     process.exit(1);
   }
 });

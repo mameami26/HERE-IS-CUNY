@@ -1,5 +1,6 @@
 import { gql } from '@apollo/client';
 
+// User authentication mutations
 export const LOGIN_USER = gql`
   mutation login($email: String!, $password: String!) {
     login(email: $email, password: $password) {
@@ -24,6 +25,7 @@ export const ADD_USER = gql`
   }
 `;
 
+// Thoughts mutations
 export const ADD_THOUGHT = gql`
   mutation addThought($thoughtText: String!, $thoughtAuthor: String!) {
     addThought(thoughtText: $thoughtText, thoughtAuthor: $thoughtAuthor) {
@@ -63,15 +65,19 @@ export const ADD_COMMENT = gql`
   }
 `;
 
-// Mentorships
+// Mentorship mutations
 export const CREATE_MENTORSHIP = gql`
-  mutation createMentorship($expertise: [String]!, $availableTimeSlots: [String]!, $industry: String, $yearsOfExperience: Int) {
-    createMentorship(expertise: $expertise, availableTimeSlots: $availableTimeSlots, industry: $industry, yearsOfExperience: $yearsOfExperience) {
+  mutation createMentorship($input: MentorshipInput!) {
+    createMentorship(input: $input) {
       _id
+      description
       expertise
       availableTimeSlots
       industry
       yearsOfExperience
+      user {
+        username
+      }
     }
   }
 `;
@@ -81,22 +87,36 @@ export const REQUEST_MENTORSHIP = gql`
     requestMentorship(mentorshipId: $mentorshipId) {
       _id
       user {
-        firstName
-        lastName
+        username
       }
     }
   }
 `;
 
-
 export const UPDATE_MENTORSHIP = gql`
-  mutation updateMentorship($mentorshipId: ID!, $expertise: [String], $availableTimeSlots: [String], $industry: String, $yearsOfExperience: Int) {
-    updateMentorship(mentorshipId: $mentorshipId, expertise: $expertise, availableTimeSlots: $availableTimeSlots, industry: $industry, yearsOfExperience: $yearsOfExperience) {
+  mutation updateMentorship(
+    $mentorshipId: ID!,
+    $expertise: [String],
+    $availableTimeSlots: [String],
+    $industry: String,
+    $yearsOfExperience: Int
+  ) {
+    updateMentorship(
+      mentorshipId: $mentorshipId,
+      expertise: $expertise,
+      availableTimeSlots: $availableTimeSlots,
+      industry: $industry,
+      yearsOfExperience: $yearsOfExperience
+    ) {
       _id
+      description
       expertise
       availableTimeSlots
       industry
       yearsOfExperience
+      user {
+        username
+      }
     }
   }
 `;
